@@ -13,6 +13,7 @@ const Exam = () => {
   const [submissionLoading, setSubmissionLoading] = useState(false); // حالة لتتبع تحميل إرسال البيانات
   const [showConfirmation, setShowConfirmation] = useState(false); // حالة لعرض رسالة التأكيد قبل الانتقال إلى صفحة النتيجة
   const [currentDepartment, setCurrentDepartment] = useState(null);
+  const [fileValidation, setFileValidation] = useState(null);
   const navigate = useNavigate(); // لتوجيه المستخدم إلى صفحة جديدة بعد تقديم الإجابات
 
   // جلب accountId من sessionStorage
@@ -277,13 +278,23 @@ const Exam = () => {
                           }}
                         ></textarea>
                       ) : question.question_type === "uploadFile" ? (
-                        <input
-                          type="file"
-                          onChange={async (e) => {
-                            handleAnswerSelect(question.id, e.target.files[0]);
-                          }}
-                          className="w-full p-2 border border-gray-300 rounded"
-                        />
+                        <>
+                          <input
+                            type="file"
+                            accept="video/*,audio/*"
+                            onChange={async (e) => {
+                              if (e.target.files[0].type.startsWith('video/') || e.target.files[0].type.startsWith('audio/')) {
+                                setFileValidation(null);
+                                handleAnswerSelect(question.id, e.target.files[0]);
+                              } else {
+                                setFileValidation('يجب عليك تحديد ملف فيديو او صوت');
+                                e.target.value = null;
+                              }
+                            }}
+                            className="w-full p-2 border border-gray-300 rounded"
+                          />
+                          {fileValidation && <div className="text-red-500  mb-4">{fileValidation}</div>}
+                        </>
                       ) : (
                         <div>نوع السؤال غير معروف</div>
                       )}

@@ -158,7 +158,7 @@ function Profile() {
         </div>
       </div>
       {/* جميع الاختبارات */}
-      {tests.length > 1 ? (
+      {tests.length > 0 ? (
         <div>
           <MainTitle head_text={"جميع الاختبارات"} />
           <div className="container w-full md:w-[85%] p-5 mx-auto">
